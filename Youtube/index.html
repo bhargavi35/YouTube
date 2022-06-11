@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YOUTUBE</title>
+    <link rel="stylesheet" href="./index.css" />
+    <script
+      src="https://kit.fontawesome.com/24c494a6b6.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="shortcut icon"
+      href="https://www.youtube.com/s/desktop/7c6fa3df/img/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+  </head>
+
+  <body>
+    <div id="navbar">
+      <div id="logo">
+        <span class="material-symbols-outlined">menu</span>
+
+        <img
+          src="https://www.seekpng.com/png/detail/77-772362_youtube-logo-youtube-logo-png.png"
+          alt=""
+        />
+      </div>
+      <div id="input">
+        <input type="text" placeholder="search" id="query" />
+        <button onclick="search()">
+          <span class="material-symbols-outlined">search</span>
+        </button>
+
+        <button id="voice">
+          <span><i class="fa-solid fa-microphone"></i></span>
+        </button>
+      </div>
+      <div id="sign">
+        <span class="material-symbols-outlined">video_call</span>
+        <span class="material-symbols-outlined">apps</span>
+        <span class="material-symbols-outlined">notifications</span>
+        <button id="signin">SIGN IN</button>
+      </div>
+    </div>
+
+    <div id="bg-container">
+      <div id="sidebar">
+        <div>
+          <span class="material-symbols-outlined">home</span
+          ><span class="name"><a href="./index.html">Home</a></span>
+        </div>
+        <div>
+          <span class="material-symbols-outlined">explore</span
+          ><span class="name">Explore</span>
+        </div>
+
+        <div>
+          <span class="material-symbols-outlined">local_fire_department</span
+          ><span class="name">Shorts</span>
+        </div>
+
+        <div>
+          <span class="material-symbols-outlined">subscriptions</span
+          ><span class="name">Subscriptions</span>
+        </div>
+        <hr />
+
+        <div>
+          <span class="material-symbols-outlined">video_library</span
+          ><span class="name">library</span>
+        </div>
+        <div>
+          <span class="material-symbols-outlined">history</span
+          ><span class="name">History</span>
+        </div>
+        <div>
+          <span class="material-symbols-outlined">update</span
+          ><span class="name">watch Later</span>
+        </div>
+        <hr />
+      </div>
+      <div id="show">
+        <hr />
+        <div id="scroll">
+          <button style="background-color: black; color: whitesmoke">
+            All
+          </button>
+          <button>Movies</button>
+          <button>Music</button>
+          <button>Mixes</button>
+          <button>Java</button>
+          <button>Java script</button>
+          <button>Arjith Singh</button>
+          <button>Thrillers</button>
+          <button>Web-series</button>
+          <button>k-drama</button>
+          <button>KGF2</button>
+          <button>Pushpa</button>
+          <button>c-language</button>
+          <button>chinna</button>
+          <button style="border: none" ,>
+            <span class="material-symbols-outlined">
+              keyboard_arrow_right
+            </span>
+          </button>
+        </div>
+        <hr />
+        <div id="showVideos"></div>
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  const API = "AIzaSyAnhnA7B52Kkf8H9H77tG0cms3QCYsWBg4";
+   
+  let showVideos = document.getElementById("showVideos");
+
+
+//    GET https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&q=HindiLoveSongs&regionCode=IN&key=[YOUR_API_KEY] HTTP/1.1
+
+    fetch("https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&q=HindiLoveSongs&regionCode=IN&key=AIzaSyAnhnA7B52Kkf8H9H77tG0cms3QCYsWBg4")
+        .then(function (res) {
+            return res.json();
+        }).then(function (res) {
+            console.log(res);
+            trending(res.items);
+        }).catch(function (err) {
+            console.log("err:", err)
+        })
+
+    const trending = (videos) => {
+       
+        showVideos.innerHTML = null;
+
+        videos.forEach(({ snippet: { title }, snippet: { channelTitle }, id: { videoId } }) => {
+            let div2 = document.createElement("div");
+            div2.setAttribute("class", "box1");
+
+
+            let v = document.createElement("div");
+            v.setAttribute = ("class", "v");
+
+            let iframe = document.createElement("iframe");
+            iframe.src = `https://www.youtube.com/embed/${videoId}`;
+            iframe.width = "100%";
+            iframe.height = "100%";
+            iframe.allow = "fullscreen";
+            iframe.setAttribute("id", "img");
+
+            let n = document.createElement("div");
+            n.setAttribute("class", "n");
+
+            let name = document.createElement("h5");
+            name.innerText = title;
+
+            let channel = document.createElement("p");
+            channel.innerText = channelTitle;
+
+
+            v.append(iframe);
+            n.append(name, channel)
+            div2.append(v, n);
+
+            showVideos.append(div2)
+
+        })
+
+    }
+
+
+
+  let search = async () => {
+    let query = document.getElementById("query").value;
+
+    try {
+      // let query = document.getElementById("query").value;
+
+    //   let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&q=${query}&key=${API}`;
+
+      let res = await fetch(
+                `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&q=${query}%202&key=${API}`);
+      let data = await res.json();
+
+      info(data.items);
+      //   console.log(data)
+    } catch (err) {
+      console.log("err:", err);
+    }
+  };
+
+  let info = (data) => {
+    let box = document.getElementById("showVideos");
+    box.innerHTML = null;
+
+
+    data.forEach(
+      ({ id: { videoId }, snippet: { title, thumbnails, channelTitle } }) => {
+        let div = document.createElement("div");
+
+        let iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+        iframe.allow = "fullscreen";
+
+        let h3 = document.createElement("h3");
+        h3.innerText = title;
+
+        let channel = document.createElement("p");
+        channel.innerText = channelTitle;
+
+        div.append(iframe, h3, channel);
+        box.append(div);
+      }
+    );
+  };
+</script>
